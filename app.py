@@ -13,28 +13,28 @@ import boto3
 from trp import Document
 
 
-#1. PLAINTEXT detection from documents:
-def plain_text(textractmodule,s3BucketName,PlaindocumentName):
+#1. plaintextimage detection from documents:
+def plain_text(textractmodule,s3BucketName,plaintextimage):
     response = textractmodule.detect_document_text(
         Document={
             'S3Object': {
                 'Bucket': s3BucketName,
-                'Name': PlaindocumentName
+                'Name': plaintextimage
             }
         })
-    print ('------------- Print Plaintext detected text ------------------------------')
+    print ('------------- Print plaintextimage detected text ------------------------------')
     for item in response["Blocks"]:
         if item["BlockType"] == "LINE":
             print (item["Text"])
     return 
 
-def form(textractmodule,s3BucketName,FormdocumentName):
+def form(textractmodule,s3BucketName,formimage):
 #2. FORM detection from documents:
     response = textractmodule.analyze_document(
         Document={
             'S3Object': {
                 'Bucket': s3BucketName,
-                'Name': FormdocumentName
+                'Name': formimage
             }
         },
         FeatureTypes=["FORMS"])
@@ -46,13 +46,13 @@ def form(textractmodule,s3BucketName,FormdocumentName):
     return
 
 
-def table(textractmodule,s3BucketName,TabledocumentName):
+def table(textractmodule,s3BucketName,tableimage):
     #2. TABLE data detection from documents:
     response = textractmodule.analyze_document(
         Document={
             'S3Object': {
                 'Bucket': s3BucketName,
-                'Name': TabledocumentName
+                'Name': tableimage
             }
         },
         FeatureTypes=["TABLES"])
@@ -70,16 +70,16 @@ def table(textractmodule,s3BucketName,TabledocumentName):
 def startpy():
     # S3 Bucket Data
     s3BucketName = "textractfrp"
-    PlaindocumentName = "Screenshot from 2022-08-07 08-30-59.png"
-    FormdocumentName = "test.jpg"
-    TabledocumentName = "Screenshot from 2022-08-07 09-22-02.png"
+    plaintextimage = "Screenshot from 2022-08-07 08-30-59.png"
+    formimage = "test.jpg"
+    tableimage = "Screenshot from 2022-08-07 09-22-02.png"
 
     # Amazon Textract client
     textractmodule = boto3.client('textract')
 
-    # plain_text(textractmodule,s3BucketName,PlaindocumentName)
-    form(textractmodule,s3BucketName,FormdocumentName)
-    # table(textractmodule,s3BucketName,TabledocumentName)
+    plain_text(textractmodule,s3BucketName,plaintextimage)
+    form(textractmodule,s3BucketName,formimage)
+    table(textractmodule,s3BucketName,tableimage)
 
     pass
 
